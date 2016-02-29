@@ -1,0 +1,61 @@
+---
+title: "Shiny Presentation: Motor Trend dataset, an mpg analysis"
+author: Todd Funk
+date: 2/28/16
+output: ioslides_presentation
+runtime: shiny
+---
+
+## Shiny Presentation
+
+"This R Markdown presentation is made interactive using Shiny. The viewers of the presentation can change the assumptions underlying what's presented and see the results immediately." This quote is what is auto-filled on the first slide of the IOSlides format that R studio provides. Click File -> New file -> R Markdown.. -> then Shiny -> Shiny Presentation. If you want a slide deck presention with Slidy code embedded, this software was designed specifically for that is easier and more practical than trying to embed Shiny code in Slidify or R Studio Presenter
+
+## What the Shiny function does
+
+The mtcars dataset  
+  
+  I created a simple interactive graphics program that allows the user to see the distribution of miles per gallon of 32 various cars that was documented by Motor Trend magazine in 1974, via a histogram. Then a slider is presented to estimate what the average miles per gallon of the cars is, which is where the mean squared error(MSE) is at a minimum. Also an input box is provided to allow you to change the number of bins the histogram is devided into, and another slider is provided to adjust the bandwidth of the associated density curve for mpg. That's 3 interactive graphics!
+  
+## Slide with Interactive Plot
+
+```{r, echo=FALSE}
+library(datasets)
+
+inputPanel(
+  selectInput("n_breaks", label = "Number of bins:",
+              choices = c(10, 20, 30, 40, 50), selected = 20),
+  
+  sliderInput("bw_adjust", label = "Bandwidth adjustment:",
+              min = 0.2, max = 2, value = 1, step = 0.2),
+  
+  sliderInput('mu','Guess the mean', value = 20, min = 10, max = 35, step = 0.5)
+  
+)
+
+renderPlot({
+  hist(mtcars$mpg, probability = TRUE, breaks = as.numeric(input$n_breaks),
+       xlab = "Miles Per Gallon", main = "Motor Trend study: MPG")
+  
+  mu <- input$mu
+      lines(c(mu,mu), c(0,200), col = 'red', lwd = 5)
+      mse <- mean((mtcars$mpg - mu)^2)
+      text(28, .12,paste("mu = ",mu))
+      text(28, .11,paste("MSE = ",mse))
+  
+  dens <- density(mtcars$mpg, adjust = input$bw_adjust)
+  lines(dens, col = "blue")
+})
+```
+
+
+## R Code and Output
+
+This slide shows what the data set looks like and what the calculated mean mpg is.
+
+```{r}
+library(datasets)
+mtcars[1:5,1:5]
+mean(mtcars$mpg)
+```
+
+

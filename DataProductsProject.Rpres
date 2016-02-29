@@ -1,0 +1,45 @@
+Developing Data Products Project
+========================================================
+author: Todd Funk
+date: `r date()`
+
+Objective
+========================================================
+
+  The purpose of this project is primarily to familiarize myself with Shiny, an interactive graphics application, and with R Studio Presenter, a deck based presentation application. In doing so I have created a simple Shiny application to find the best estimation of the mean based on the mean squared error of  a dataset of cars collected by Motor Trend magizine in 1974
+  
+The mtcars dataset
+========================================================
+ 
+  In order to do so, I created a simple interactive graphics program in Shiny that allows the user to see the distribution of miles per gallon of 32 various cars. Then a slider is presented to estimate what the average miles per gallon of the cars is, which is where the mean squared error(MSE) is at a minimum.
+
+The Raw Data
+=========================================================  
+
+
+First, lets look at the dataset:
+```{r}
+library(datasets)
+mtcars[1:8,1:5]
+```
+
+
+Shiny code
+========================================================
+```{r, echo=FALSE}
+library(datasets)
+
+hist(mtcars$mpg, probability = TRUE, breaks = 10,
+       xlab = "Miles Per Gallon", main = "Motor Trend study: MPG")
+  
+mu <- mean(mtcars$mpg)
+    lines(c(mu,mu), c(0,200), col = 'red', lwd = 5)
+    mse <- mean((mtcars$mpg - mu)^2)
+    text(28, .12,paste("mu = ",mu))
+    text(28, .11,paste("MSE = ",mse))
+```
+
+The slider built into the Shiny app allows you to move the red bar and changes the mean and the MSE for the new location of the bar
+
+
+
